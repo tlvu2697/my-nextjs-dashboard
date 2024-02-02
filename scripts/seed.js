@@ -65,8 +65,8 @@ async function seedInvoices(client) {
 
     // Insert data into the "invoices" table
     const insertedInvoices = await Promise.all(
-      invoices.map(
-        (invoice) => client.query(`
+      invoices.map((invoice) =>
+        client.query(`
         INSERT INTO invoices (customer_id, amount, status, date)
         VALUES ('${invoice.customer_id}', '${invoice.amount}', '${invoice.status}', '${invoice.date}')
         ON CONFLICT (id) DO NOTHING;
@@ -104,8 +104,8 @@ async function seedCustomers(client) {
 
     // Insert data into the "customers" table
     const insertedCustomers = await Promise.all(
-      customers.map(
-        (customer) => client.query(`
+      customers.map((customer) =>
+        client.query(`
         INSERT INTO customers (id, name, email, image_url)
         VALUES ('${customer.id}', '${customer.name}', '${customer.email}', '${customer.image_url}')
         ON CONFLICT (id) DO NOTHING;
@@ -139,8 +139,8 @@ async function seedRevenue(client) {
 
     // Insert data into the "revenue" table
     const insertedRevenue = await Promise.all(
-      revenue.map(
-        (rev) => client.query(`
+      revenue.map((rev) =>
+        client.query(`
         INSERT INTO revenue (month, revenue)
         VALUES ('${rev.month}', '${rev.revenue}')
         ON CONFLICT (month) DO NOTHING;
@@ -162,15 +162,10 @@ async function seedRevenue(client) {
 
 async function main() {
   const client = new Client({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DATABASE,
-    ssl: process.env.POSTGRES_SSL === 'true',
-  })
+    connectionString: process.env.POSTGRES_URL_NON_POOLING,
+  });
 
-  await client.connect()
+  await client.connect();
   await seedUsers(client);
   await seedCustomers(client);
   await seedInvoices(client);
