@@ -10,7 +10,7 @@ const pool = new Pool({
   ssl: process.env.POSTGRES_SSL === 'true',
 })
 
-export const query = <Result extends QueryResultRow>(
+export const Query = <Result extends QueryResultRow>(
   text: string,
   params: any[] = []
 ) => {
